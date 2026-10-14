@@ -1,0 +1,253 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>英文題庫入口</title>
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #FAF8F3;
+    --surface: #FFFFFF;
+    --ink: #2B2A27;
+    --muted: #7A766E;
+    --line: #E7E2D8;
+    --accent: #2F6F62;
+    --accent-ink: #FFFFFF;
+    --accent-soft: #E6F0EC;
+    --focus: #2F6F62;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #1B1C1A;
+      --surface: #232422;
+      --ink: #ECE9E2;
+      --muted: #9A968D;
+      --line: #34352F;
+      --accent: #6FB3A2;
+      --accent-ink: #13201C;
+      --accent-soft: #24332E;
+      --focus: #6FB3A2;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #1B1C1A; --surface: #232422; --ink: #ECE9E2; --muted: #9A968D;
+    --line: #34352F; --accent: #6FB3A2; --accent-ink: #13201C; --accent-soft: #24332E; --focus: #6FB3A2;
+  }
+
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: "Noto Sans TC", system-ui, -apple-system, "PingFang TC", "Microsoft JhengHei", sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+  }
+  .wrap { max-width: 640px; margin: 0 auto; padding: 40px 16px 56px; }
+
+  header { display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-bottom: 28px; }
+  h1 { font-size: 1.25rem; font-weight: 700; margin: 0; letter-spacing: .02em; }
+  .sub { color: var(--muted); font-size: .875rem; margin: 4px 0 0; }
+
+  .seg { display: inline-flex; border: 1px solid var(--line); border-radius: 999px; padding: 3px; background: var(--surface); }
+  .seg button {
+    appearance: none; border: 0; background: transparent; color: var(--muted);
+    font: inherit; font-size: .875rem; padding: 6px 14px; border-radius: 999px; cursor: pointer;
+  }
+  .seg button[aria-selected="true"] { background: var(--ink); color: var(--bg); font-weight: 500; }
+
+  .panel { animation: fade .15s ease-out; }
+  .panel[hidden] { display: none; }
+  @keyframes fade { from { opacity: 0; } to { opacity: 1; } }
+  @media (prefers-reduced-motion: reduce) { .panel { animation: none; } }
+
+  h2 { font-size: .8125rem; font-weight: 500; color: var(--muted); letter-spacing: .08em; margin: 32px 0 4px; }
+  h2:first-child { margin-top: 0; }
+
+  ul.rows { list-style: none; margin: 0; padding: 0; }
+  .row {
+    display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 4px 16px;
+    padding: 14px 0; border-bottom: 1px solid var(--line);
+  }
+  .name { font-weight: 700; }
+  .range { color: var(--muted); font-size: .875rem; }
+  .count { color: var(--muted); font-size: .8125rem; font-variant-numeric: tabular-nums; margin-right: 4px; }
+  .acts { display: flex; align-items: center; gap: 12px; grid-row: span 2; }
+
+  .copy {
+    appearance: none; border: 0; cursor: pointer; font: inherit; font-size: .875rem; font-weight: 500;
+    background: var(--accent); color: var(--accent-ink);
+    min-width: 72px; min-height: 36px; padding: 6px 14px; border-radius: 8px;
+    transition: background .15s;
+  }
+  .copy.done { background: var(--accent-soft); color: var(--accent); }
+  @media (prefers-reduced-motion: reduce) { .copy { transition: none; } }
+  a.open { color: var(--ink); font-size: .875rem; text-underline-offset: 3px; }
+  a.open:hover { color: var(--accent); }
+
+  .tools { display: flex; flex-wrap: wrap; gap: 6px 18px; padding: 12px 0 0; }
+  .tools a { color: var(--ink); text-underline-offset: 3px; font-size: .9375rem; }
+  .tools a:hover { color: var(--accent); }
+
+  details.tpl { margin-top: 40px; border-top: 1px solid var(--line); padding-top: 16px; }
+  details.tpl summary { cursor: pointer; color: var(--muted); font-size: .875rem; }
+  details.tpl textarea {
+    width: 100%; margin-top: 10px; min-height: 72px; resize: vertical;
+    font: inherit; font-size: .9375rem; color: var(--ink); background: var(--surface);
+    border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px;
+  }
+  .hint { color: var(--muted); font-size: .8125rem; margin: 6px 0 0; }
+  .hint code { font-family: inherit; background: var(--accent-soft); color: var(--accent); padding: 0 4px; border-radius: 4px; }
+  .reset { appearance: none; border: 0; background: none; color: var(--muted); font: inherit; font-size: .8125rem; text-decoration: underline; cursor: pointer; padding: 0; margin-left: 6px; }
+
+  footer { margin-top: 40px; color: var(--muted); font-size: .8125rem; line-height: 1.7; }
+  footer a { color: var(--muted); }
+
+  :focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+
+  @media (max-width: 420px) {
+    .row { grid-template-columns: 1fr; }
+    .acts { grid-row: auto; margin-top: 6px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div>
+      <h1>英文題庫入口</h1>
+      <p class="sub">複製後直接貼到 LINE 給學生</p>
+    </div>
+    <div class="seg" role="tablist" aria-label="考試類別">
+      <button role="tab" id="tab-gsat" aria-controls="p-gsat" aria-selected="true">學測</button>
+      <button role="tab" id="tab-gept" aria-controls="p-gept" aria-selected="false">英檢中級</button>
+    </div>
+  </header>
+
+  <main>
+    <section class="panel" id="p-gsat" role="tabpanel" aria-labelledby="tab-gsat">
+      <h2>單字記憶卡</h2>
+      <ul class="rows" data-group="gsat"></ul>
+    </section>
+
+    <section class="panel" id="p-gept" role="tabpanel" aria-labelledby="tab-gept" hidden>
+      <h2>初試・單字</h2>
+      <ul class="rows" data-group="gept"></ul>
+      <h2>複試・寫作與聽力</h2>
+      <ul class="rows" data-group="gept2"></ul>
+    </section>
+
+    <h2>工具</h2>
+    <nav class="tools" aria-label="工具">
+      <a href="https://staresto-create.github.io/JCEE-vocab-questions/#rules" target="_blank" rel="noopener">讀句子的第一步</a>
+      <a href="https://staresto-create.github.io/JCEE-vocab-questions/cards/" target="_blank" rel="noopener">單字記憶卡</a>
+      <a href="https://staresto-create.github.io/JCEE-vocab-questions/affixes/" target="_blank" rel="noopener">字首字尾表</a>
+      <a href="https://staresto-create.github.io/essay-prompts/" target="_blank" rel="noopener">作文範文</a>
+      <a href="https://staresto-create.github.io/JCEE-vocab-questions/cards/teacher.html" target="_blank" rel="noopener">自訂範圍 →</a>
+    </nav>
+
+    <details class="tpl">
+      <summary>複製時附上的訊息</summary>
+      <textarea id="tpl" aria-label="訊息範本"></textarea>
+      <p class="hint"><code>{名稱}</code> <code>{數量}</code> <code>{連結}</code> 會自動代入。只存在這台裝置。<button class="reset" id="tplReset" type="button">恢復預設</button></p>
+    </details>
+  </main>
+
+  <footer>
+    所有練習內容來自 <a href="https://staresto-create.github.io/JCEE-vocab-questions/" target="_blank" rel="noopener">高中英文自學題庫</a>（staresto-create ZZSH），採 CC BY-NC 4.0 授權，本頁只提供連結。字數於 2026 年 10 月核對，原網站更新後可能略有變動。
+  </footer>
+</div>
+
+<script>
+(function () {
+  var CARDS = 'https://staresto-create.github.io/JCEE-vocab-questions/cards/';
+  var DATA = {
+    gsat: [
+      { name: '國三銜接', range: '2～3 級・考過 2 次以上', count: '159 字', url: CARDS + '#y=81-115&lv=2-3&n=2&t=國三銜接' },
+      { name: '高一打底', range: '3～4 級・考過 3 次以上', count: '121 字', url: CARDS + '#y=81-115&lv=3-4&n=3&t=高一打底' },
+      { name: '學測衝刺', range: '學測近十年・4～5 級', count: '257 字', url: CARDS + '#y=106-115&st=gsat&lv=4-5&t=學測衝刺' },
+      { name: '最常考核心', range: '全部字級・考過 4 次以上', count: '68 字', url: CARDS + '#y=81-115&n=4&t=最常考核心' },
+      { name: '易混淆字組', range: 'affect／effect 這類字一組一組記', count: '317 組', url: CARDS + '#deck=cf&t=易混淆字組' }
+    ],
+    gept: [
+      { name: '中級核心', range: '2～4 級・考過 2 次以上', count: '391 字', url: CARDS + '#y=81-115&lv=2-4&n=2&t=中級核心' },
+      { name: '中級進階', range: '學測近十年・2～4 級', count: '346 字', url: CARDS + '#y=106-115&st=gsat&lv=2-4&t=中級進階' },
+      { name: '熟字新義', range: '一字多義・1～2 級', count: '73 字', url: CARDS + '#deck=po&lv=1-2&t=熟字新義' }
+    ],
+    gept2: [
+      { name: '中譯英', range: '歷屆學測、指考中譯英，附解析', count: '218 題', url: 'https://staresto-create.github.io/JCEE-vocab-questions/translate/' },
+      { name: '作文基礎範文', range: '約 170 字，用字以一、二級為主', count: '60 篇', url: 'https://staresto-create.github.io/essay-prompts/' },
+      { name: '英聽練習', range: '大考中心官方錄音，逐題解析', count: '6 卷', url: 'https://staresto-create.github.io/JCEE-vocab-questions/listening/' }
+    ]
+  };
+  var DEFAULT_TPL = '這週練這組：{名稱}（{數量}），每天 15 張就好 👉 {連結}';
+  var KEY_TPL = 'hub.tpl', KEY_TAB = 'hub.tab';
+
+  function load(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
+  function save(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+
+  var tplEl = document.getElementById('tpl');
+  tplEl.value = load(KEY_TPL) || DEFAULT_TPL;
+  tplEl.addEventListener('input', function () { save(KEY_TPL, tplEl.value); });
+  document.getElementById('tplReset').addEventListener('click', function () {
+    tplEl.value = DEFAULT_TPL; save(KEY_TPL, DEFAULT_TPL);
+  });
+
+  function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+
+  Object.keys(DATA).forEach(function (g) {
+    var ul = document.querySelector('ul[data-group="' + g + '"]');
+    ul.innerHTML = DATA[g].map(function (it, i) {
+      return '<li class="row">' +
+        '<span class="name">' + esc(it.name) + '</span>' +
+        '<span class="acts"><span class="count">' + esc(it.count) + '</span>' +
+        '<button class="copy" type="button" data-g="' + g + '" data-i="' + i + '">複製</button>' +
+        '<a class="open" href="' + esc(encodeURI(it.url)) + '" target="_blank" rel="noopener">開啟</a></span>' +
+        '<span class="range">' + esc(it.range) + '</span>' +
+        '</li>';
+    }).join('');
+  });
+
+  function fallbackCopy(text) {
+    var ta = document.createElement('textarea');
+    ta.value = text; ta.setAttribute('readonly', ''); ta.style.position = 'fixed'; ta.style.opacity = '0';
+    document.body.appendChild(ta); ta.select();
+    var ok = false; try { ok = document.execCommand('copy'); } catch (e) {}
+    document.body.removeChild(ta); return ok;
+  }
+
+  document.addEventListener('click', function (e) {
+    var b = e.target.closest('button.copy');
+    if (!b) return;
+    var it = DATA[b.dataset.g][+b.dataset.i];
+    var text = (tplEl.value || DEFAULT_TPL)
+      .replace(/\{名稱\}/g, it.name).replace(/\{數量\}/g, it.count).replace(/\{連結\}/g, encodeURI(it.url));
+    function done() {
+      b.textContent = '已複製'; b.classList.add('done');
+      clearTimeout(b._t); b._t = setTimeout(function () { b.textContent = '複製'; b.classList.remove('done'); }, 2000);
+    }
+    if (navigator.clipboard && window.isSecureContext) {
+      navigator.clipboard.writeText(text).then(done, function () { if (fallbackCopy(text)) done(); });
+    } else if (fallbackCopy(text)) { done(); }
+  });
+
+  var tabs = document.querySelectorAll('.seg button');
+  function show(id) {
+    tabs.forEach(function (t) {
+      var on = t.id === id;
+      t.setAttribute('aria-selected', on ? 'true' : 'false');
+      document.getElementById(t.getAttribute('aria-controls')).hidden = !on;
+    });
+    save(KEY_TAB, id);
+  }
+  tabs.forEach(function (t) { t.addEventListener('click', function () { show(t.id); }); });
+  var last = load(KEY_TAB); if (last && document.getElementById(last)) show(last);
+})();
+</script>
+</body>
+</html>
